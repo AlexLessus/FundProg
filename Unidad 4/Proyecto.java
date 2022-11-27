@@ -7,66 +7,166 @@ public class Proyecto{
       float diametros[] = new float[100];
       float precios[] = new float[100];      
       
-      int opc = 0, clave=0, cont = 0;     
+      int opc = 0, clave=0, cont = 0, change = 0;     
       boolean flag = true;
       do{
-         cont++;
-         System.out.println("\n[1] --Registrar");
-         System.out.println("[2] --Consulta Individual");
-         System.out.println("[3] --Consulta general");
-         System.out.println("[4] --Modificar");
-         System.out.println("[5] --Baja");
-         System.out.println("[6] --Finalizar");
+         System.out.println("\n-- BIENVENIDO --\n");
+         System.out.println("[1] -- Registrar un nuevo sarten.");
+         System.out.println("[2] -- Consultar un sarten individualmente.");
+         System.out.println("[3] -- Consulta todos los sartenes.");
+         System.out.println("[4] -- Modificar datos de un sarten.");
+         System.out.println("[5] -- Bajar o eliminar sarten.");
+         System.out.println("[6] -- Finalizar");
+         System.out.print("\nOpcion deseada [1-6]: ");
          opc = get.nextInt();
          switch(opc){
             case 1: //Registrar/alta
+               flag = true;
                System.out.println("\n==== Registrar sarten ====");
                if(cont < 100){
-                  System.out.print("Ingrese el codigo[1-111]: ");
+                  System.out.print("Ingrese la clave del sarten [1-111]: ");
                   clave = get.nextInt();
                   get.nextLine();
-                  if(clave < 1 && clave > 111){
-                     System.out.println("Clave no valida");
-                     break;
-                  }//error en clave fuera del rango
-                  if(clave == claves[clave]){
-                     System.out.println("La clave ya ha sido registrada");
-                     flag = false;
+                  
+                  //error en clave fuera del rango
+                  if(clave < 1 || clave > 111){
+                     System.out.println("\nClave no valida.\n");
                      break;
                   }
                   
+                  /* verifica que si la clave se encuentra, el if valida que no sea la primera vez que se registra un sarte
+                     ya que sera inutil verificar si este esta entre las claves previas si es el primer sarten en ser registrado
+                  */  
+                  if(cont > 0) {
+                     for(int i=0; i<cont; i++) {
+                        if(clave == claves[i]) {
+                           System.out.println("\nLa clave ya esta en uso.");
+                           flag = false;
+                           break;
+                        }
+                     
+                     }
+                  }
+                          
                   if(flag){
-                     claves[clave] = clave;
-                     System.out.print(" -Ingrese el modelo: ");
-                     modelos[clave] = get.nextLine();
-                     System.out.print(" -Ingrese el diametro del sarten: ");
-                     diametros[clave] = get.nextFloat();
-                     System.out.print(" -Ingrese el precio: ");
-                     precios[clave] = get.nextFloat();
-                     flag = true;
+                     claves[cont] = clave;
+                     System.out.print(" - Ingrese el modelo del sarten: ");
+                     modelos[cont] = get.nextLine();
+                     System.out.print(" - Ingrese el diametro del sarten: ");
+                     diametros[cont] = get.nextFloat();
+                     System.out.print(" - Ingrese el precio del sarten: ");
+                     precios[cont] = get.nextFloat();
+                     cont++;
                   }
                }
                else{
-                  System.out.println(" (!) Espacio insuficiente (!)");
+                  System.out.println(" (!) No se cuenta con espacio suficiente para registrar un sarte más (!)");
                }
                break;
             case 2: //Consulta individual
+               flag = false;
+               if(cont == 0) {
+                  System.out.println("\nAun no se ha registrado ningun sarten.\n");
+                  break;
+               }
                
+               System.out.print("Ingresa la clave del sarten:  ");
+               clave = get.nextInt();
+               
+               if(clave < 1 || clave > 111){
+                  System.out.println("\nClave no valida");
+                  break;
+               }       
+               for(int i=0; i<cont; i++) {
+                  if(clave == claves[i]) {
+                     System.out.println("\n-- Datos del sarten --");
+                     System.out.printf("\nCLAVE: %d",claves[i]);
+                     System.out.printf("\nMODELO: %s",modelos[i]);
+                     System.out.printf("\nDIAMETRO: %.2f cm",diametros[i]);
+                     System.out.printf("\nPRECIO: $%.2f\n",precios[i]);
+                     flag = true;                      
+                     break;
+                  }
+               }
+               if(flag == false)   
+                  System.out.printf("\nNo se encuenta ningun sarten con la clave: %d\n", clave);
                break;
             case 3: //Consulta General
-               
+               if(cont == 0) {
+                  System.out.println("\nAun no se ha registrado ningun sarten.\n");
+                  break;
+               }
+               for(int i=0; i<cont; i++) {
+                     System.out.println("\n-- TODOS LOS PRODUCTOS --");
+                     System.out.printf("\nCLAVE: %d",claves[i]);
+                     System.out.printf("\nMODELO: %s",modelos[i]);
+                     System.out.printf("\nDIAMETRO: %.2f cm",diametros[i]);
+                     System.out.printf("\nPRECIO: $%.2f\n",precios[i]);                   
+               }
                break;
             case 4: //Modificar
+               flag = true;
+               if(cont == 0) {
+                  System.out.println("\nAun no se ha registrado ningun sarten.\n");
+                  break;
+               }
+               System.out.print("\n-- Modificar datos --\n");
+               System.out.print("\nIngresa la clave del sarten:  ");
+               clave = get.nextInt();
                
+               if(clave < 1 || clave > 111){
+                  System.out.println("\nClave no valida\n");
+                  break;
+               } 
+               for(int i=0; i<cont; i++) {
+                  if(clave == claves[i]) {
+                     do {
+                        System.out.printf("\nElige la opcion a modificar\n\n");
+                        System.out.printf("[1] - Modelo actual: %s.\n",modelos[i]);
+                        System.out.printf("[2] - Diametro actual: %.2f.\n",diametros[i]);
+                        System.out.printf("[3] - Precio actual: %.2f.\n",precios[i]);
+                        System.out.println("[4] - Terminar");
+                        System.out.print("\nOpcion: ");
+                        change = get.nextInt();
+                        if(change > 0 && change < 5) {
+                           switch(change) {
+                              case 1:
+                                 get.nextLine();
+                                 System.out.print("\nIngresa el nuevo modelo: ");
+                                 modelos[i] = get.nextLine();
+                                 break;
+                              case 2:
+                                 System.out.print("\nIngresa el nuevo diametro: ");
+                                 diametros[i] = get.nextFloat();
+                                 break;
+                              case 3:
+                                 System.out.print("\nIngresa el nuevo precio: ");
+                                 precios[i] = get.nextFloat();
+                                 break;
+                              case 4:
+                                 flag = false;         
+                           }
+                        } else {
+                           System.out.println("\nAsegurate de elegir una opcion dentro del rango permitido.\n");
+                        }
+                     }while(flag);                  
+                     break;                     
+                  }
+               }
+               if(flag)   
+                  System.out.printf("\nNo se encuenta ningun sarten con la clave: %d\n", clave);                  
                break;
             case 5: //Baja
                
                break;
-            case 6: //Finalizar
-            
+            case 6:
+               System.out.println("\nPROGRAMADORES");
+               System.out.println("Alexis Perez Carmona");
+               System.out.println("Gustavo Valerio Guzman");
+               System.out.println("\nFecha: 26/Nov/2022");
                break;
             default:
-            
+               System.out.println("\nOpcion no valida, asegurate de colocar un numero dentro del rango permitido.\n");
                break;
          }
       }while(opc != 6);
