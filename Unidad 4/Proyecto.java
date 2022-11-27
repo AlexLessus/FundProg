@@ -7,7 +7,9 @@ public class Proyecto{
       float diametros[] = new float[100];
       float precios[] = new float[100];      
       
-      int opc = 0, clave=0, cont = 0, change = 0;     
+      String aux1 = ""; 
+      float aux2 =0f;
+      int opc = 0, clave=0, cont = 0, change = 0, aux=0;     
       boolean flag = true;
       do{
          System.out.println("\n-- BIENVENIDO --\n");
@@ -60,9 +62,10 @@ public class Proyecto{
                   }
                }
                else{
-                  System.out.println(" (!) No se cuenta con espacio suficiente para registrar un sarte más (!)");
+                  System.out.println(" (!) No se cuenta con espacio suficiente para registrar un sarten más (!)");
                }
                break;
+               
             case 2: //Consulta individual
                flag = false;
                if(cont == 0) {
@@ -91,19 +94,45 @@ public class Proyecto{
                if(flag == false)   
                   System.out.printf("\nNo se encuenta ningun sarten con la clave: %d\n", clave);
                break;
+               
             case 3: //Consulta General
                if(cont == 0) {
                   System.out.println("\nAun no se ha registrado ningun sarten.\n");
                   break;
                }
+               //Burbuja para ordenar los elementos del arreglo
+               for(int i=0; i<cont-1; i++){
+                  for(int j=0; j<cont-1-i; j++){
+                     if(claves[j] > claves[j+1]){
+                        aux = claves[j];
+                        claves[j] = claves[j+1];
+                        claves[j+1] = aux;
+                        
+                        aux1 = modelos[j];
+                        modelos[j] = modelos[j+1];
+                        modelos[j+1] = aux1;
+                        
+                        aux2 = diametros[j];
+                        diametros[j] = diametros[j+1];
+                        diametros[j+1] = aux2;
+                        
+                        aux2 = precios[j];
+                        precios[j] = precios[j+1];
+                        precios[j+1] = aux2;                        
+                     }
+                  }  
+               }
+               
+               System.out.println("\n-- TODOS LOS PRODUCTOS --");
                for(int i=0; i<cont; i++) {
-                     System.out.println("\n-- TODOS LOS PRODUCTOS --");
+                     System.out.println("\n------------");
                      System.out.printf("\nCLAVE: %d",claves[i]);
                      System.out.printf("\nMODELO: %s",modelos[i]);
                      System.out.printf("\nDIAMETRO: %.2f cm",diametros[i]);
                      System.out.printf("\nPRECIO: $%.2f\n",precios[i]);                   
                }
                break;
+               
             case 4: //Modificar
                flag = true;
                if(cont == 0) {
@@ -156,12 +185,46 @@ public class Proyecto{
                if(flag)   
                   System.out.printf("\nNo se encuenta ningun sarten con la clave: %d\n", clave);                  
                break;
+               
             case 5: //Baja
+               if(cont == 0) {
+                  System.out.println("\nAun no se ha registrado ningun sarten.\n");
+                  break;
+               }
+               System.out.print("\n-- Eliminar datos --\n");
+               System.out.print("\nIngresa la clave del sarten a dar de baja:  ");
+               
+               clave = get.nextInt();
+               if(clave < 1 || clave > 111){
+                  System.out.println("\nClave no valida\n");
+                  break;
+               } 
+               
+               for(int i=0; i<cont; i++) {
+                  if(clave == claves[i]) {
+                     System.out.printf("Modelo actual: %s.\n",modelos[i]);
+                     System.out.printf("Diametro actual: %.2f.\n",diametros[i]);
+                     System.out.printf("Precio actual: %.2f.\n",precios[i]);
+                     System.out.print("¿ESTA SEGURO DE ELIMINAR ESTE SARTEN? [1=SI]");
+                     change = get.nextInt();
+                     if(change == 1){
+                        for(int j=i; j<cont-1; j++){
+                           claves[j] = claves[j+1];
+                           modelos[j] = modelos[j+1];
+                           diametros[j] = diametros[j+1];
+                           precios[j] = precios[j+1];
+                        }
+                        cont--;
+                     }
+                     break;
+                  }
+               }              
                
                break;
+               
             case 6:
                System.out.println("\nPROGRAMADORES");
-               System.out.println("Alexis Perez Carmona");
+               System.out.println("Alexis De Jesus Perez Carmona");
                System.out.println("Gustavo Valerio Guzman");
                System.out.println("\nFecha: 26/Nov/2022");
                break;
