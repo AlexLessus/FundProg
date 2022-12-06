@@ -5,14 +5,17 @@ public class Proyecto{
       int claves[] = new int[100];
       String modelos[] = new String[100];
       float diametros[] = new float[100];
-      float precios[] = new float[100];      
+      float precios[] = new float[100];
+      boolean esAcero[] = new boolean[100];      
       
-      String aux1 = ""; 
+      String aux1 = "", material = ""; 
       float aux2 =0f;
-      int opc = 0, clave=0, cont = 0, change = 0, aux=0;     
-      boolean flag = true;
+      boolean aux3;
+      int opc = 0, clave=0, cont = 0, change = 0, aux=0, auxiliar=0;     
+      boolean esValido = true;
+      
       do{
-         System.out.println("\n-- BIENVENIDO --\n");
+         System.out.println("\n-- BIENVENIDO A SARTENAZOS --\n");
          System.out.println("[1] -- Registrar un nuevo sarten.");
          System.out.println("[2] -- Consultar un sarten individualmente.");
          System.out.println("[3] -- Consulta todos los sartenes.");
@@ -23,8 +26,8 @@ public class Proyecto{
          opc = get.nextInt();
          switch(opc){
             case 1: //Registrar/alta
-               flag = true;
-               System.out.println("\n==== Registrar sarten ====");
+               esValido = true;
+               System.out.println("\n--- Registrar sarten ---");
                if(cont < 100){
                   System.out.print("Ingrese la clave del sarten [1-111]: ");
                   clave = get.nextInt();
@@ -43,14 +46,14 @@ public class Proyecto{
                      for(int i=0; i<cont; i++) {
                         if(clave == claves[i]) {
                            System.out.println("\nLa clave ya esta en uso.");
-                           flag = false;
+                           esValido = false;
                            break;
                         }
                      
                      }
                   }
                           
-                  if(flag){
+                  if(esValido){
                      claves[cont] = clave;
                      System.out.print(" - Ingrese el modelo del sarten: ");
                      modelos[cont] = get.nextLine();
@@ -58,6 +61,18 @@ public class Proyecto{
                      diametros[cont] = get.nextFloat();
                      System.out.print(" - Ingrese el precio del sarten: ");
                      precios[cont] = get.nextFloat();
+                     do {
+                        System.out.print(" - Ingrese el material [1. Acero    2. Teflon]: ");
+                        auxiliar = get.nextInt();
+                        if(auxiliar == 1) {
+                           esAcero[cont] = true;
+                           break;
+                        } else if(auxiliar == 2) {
+                           esAcero[cont] = false;
+                           break;
+                        }
+                        System.out.println("\nOpcion no valida, introduce un numero dentro del rango 1-2");      
+                     } while(true);
                      cont++;
                   }
                }
@@ -67,7 +82,7 @@ public class Proyecto{
                break;
                
             case 2: //Consulta individual
-               flag = false;
+               esValido = false;
                if(cont == 0) {
                   System.out.println("\nAun no se ha registrado ningun sarten.\n");
                   break;
@@ -86,12 +101,17 @@ public class Proyecto{
                      System.out.printf("\nCLAVE: %d",claves[i]);
                      System.out.printf("\nMODELO: %s",modelos[i]);
                      System.out.printf("\nDIAMETRO: %.2f cm",diametros[i]);
-                     System.out.printf("\nPRECIO: $%.2f\n",precios[i]);
-                     flag = true;                      
+                     System.out.printf("\nPRECIO: $%.2f",precios[i]);
+                     if(esAcero[i])
+                        material = "Acero";
+                     else
+                        material = "Teflon";
+                     System.out.printf("\nMATERIAL: %s\n",material);                       
+                     esValido = true;                      
                      break;
                   }
                }
-               if(flag == false)   
+               if(esValido == false)   
                   System.out.printf("\nNo se encuenta ningun sarten con la clave: %d\n", clave);
                break;
                
@@ -118,23 +138,31 @@ public class Proyecto{
                         
                         aux2 = precios[j];
                         precios[j] = precios[j+1];
-                        precios[j+1] = aux2;                        
+                        precios[j+1] = aux2;
+                        
+                        aux3 = esAcero[j];
+                        esAcero[j] = esAcero[j+1];
+                        esAcero[j+1] = aux3;                        
                      }
                   }  
                }
                
                System.out.println("\n-- TODOS LOS PRODUCTOS --");
                for(int i=0; i<cont; i++) {
-                     System.out.println("\n------------");
-                     System.out.printf("\nCLAVE: %d",claves[i]);
-                     System.out.printf("\nMODELO: %s",modelos[i]);
-                     System.out.printf("\nDIAMETRO: %.2f cm",diametros[i]);
-                     System.out.printf("\nPRECIO: $%.2f\n",precios[i]);                   
+                  if(esAcero[i])
+                     material = "Acero";
+                  else
+                     material = "Teflon";
+                  System.out.printf("\nCLAVE: %d",claves[i]);
+                  System.out.printf("\nMODELO: %s",modelos[i]);
+                  System.out.printf("\nDIAMETRO: %.2f cm",diametros[i]);
+                  System.out.printf("\nPRECIO: $%.2f",precios[i]);
+                  System.out.printf("\nMATERIAL: %s\n\n",material);                   
                }
                break;
                
             case 4: //Modificar
-               flag = true;
+               esValido = true;
                if(cont == 0) {
                   System.out.println("\nAun no se ha registrado ningun sarten.\n");
                   break;
@@ -150,14 +178,20 @@ public class Proyecto{
                for(int i=0; i<cont; i++) {
                   if(clave == claves[i]) {
                      do {
-                        System.out.printf("\nElige la opcion a modificar\n\n");
-                        System.out.printf("[1] - Modelo actual: %s.\n",modelos[i]);
-                        System.out.printf("[2] - Diametro actual: %.2f.\n",diametros[i]);
-                        System.out.printf("[3] - Precio actual: %.2f.\n",precios[i]);
-                        System.out.println("[4] - Terminar");
-                        System.out.print("\nOpcion: ");
-                        change = get.nextInt();
-                        if(change > 0 && change < 5) {
+                  if(esAcero[i])
+                     material = "Acero";
+                  else
+                     material = "Teflon";
+                     
+                     System.out.printf("\nElige la opcion a modificar\n\n");
+                     System.out.printf("[1] - Modelo actual: %s.\n",modelos[i]);
+                     System.out.printf("[2] - Diametro actual: %.2f.\n",diametros[i]);
+                     System.out.printf("[3] - Precio actual: %.2f.\n",precios[i]);
+                     System.out.printf("[4] - Material actual: %s.\n",material);
+                     System.out.println("[5] - Terminar");
+                     System.out.print("\nOpcion: ");
+                     change = get.nextInt();
+                        if(change > 0 && change < 6) {
                            switch(change) {
                               case 1:
                                  get.nextLine();
@@ -173,16 +207,28 @@ public class Proyecto{
                                  precios[i] = get.nextFloat();
                                  break;
                               case 4:
-                                 flag = false;         
+                                 System.out.print("Ingresa el material [1. Acero  2. Teflon ]: ");
+                                 auxiliar = get.nextInt();
+                                 if(auxiliar == 1) {
+                                    esAcero[i] = true;
+                                    break;
+                                 } else if(auxiliar == 2) {                                                               
+                                    esAcero[i] = false;
+                                    break;
+                                 }
+                                 System.out.println("\nIngresa una opcion dentro del rango 1-2\n");                          
+                                 break;   
+                              case 5:
+                                 esValido = false;         
                            }
                         } else {
                            System.out.println("\nAsegurate de elegir una opcion dentro del rango permitido.\n");
                         }
-                     }while(flag);                  
+                     }while(esValido);                  
                      break;                     
                   }
                }
-               if(flag)   
+               if(esValido)   
                   System.out.printf("\nNo se encuenta ningun sarten con la clave: %d\n", clave);                  
                break;
                
@@ -202,10 +248,15 @@ public class Proyecto{
                
                for(int i=0; i<cont; i++) {
                   if(clave == claves[i]) {
+                     if(esAcero[i])
+                        material = "Acero";
+                     else
+                        material = "Teflon";
                      System.out.printf("Modelo actual: %s.\n",modelos[i]);
                      System.out.printf("Diametro actual: %.2f.\n",diametros[i]);
                      System.out.printf("Precio actual: %.2f.\n",precios[i]);
-                     System.out.print("¿ESTA SEGURO DE ELIMINAR ESTE SARTEN? [1=SI]");
+                     System.out.printf("Material actual: %s\n",material);
+                     System.out.print("¿ESTA SEGURO DE ELIMINAR ESTE SARTEN? [1=SI  2=NO]: ");
                      change = get.nextInt();
                      if(change == 1){
                         for(int j=i; j<cont-1; j++){
@@ -213,15 +264,14 @@ public class Proyecto{
                            modelos[j] = modelos[j+1];
                            diametros[j] = diametros[j+1];
                            precios[j] = precios[j+1];
+                           esAcero[j] = esAcero[j+1];
                         }
-                        cont--;
+                     cont--;
                      }
                      break;
                   }
-               }              
-               
-               break;
-               
+               }                    
+               break;            
             case 6:
                System.out.println("\nPROGRAMADORES");
                System.out.println("Alexis De Jesus Perez Carmona");
